@@ -32,7 +32,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/queues.git", from: "1.5.1"),
         .package(url: "https://github.com/vapor/redis.git", from: "4.0.0"),
         .package(url: "https://github.com/vapor-community/google-cloud-kit.git", from: "1.0.0-rc.2"),
-        .package(url: "https://github.com/soto-project/soto.git", from: "4.0.0"),
+        .package(url: "https://github.com/soto-project/soto.git", from: "5.12.1"),
         .package(url: "https://github.com/swift-server/async-http-client.git", from: "1.8.1"),
     ],
     targets: [
@@ -83,7 +83,7 @@ let package = Package(
                 .product(name: "XCLogParser", package: "XCLogParser"),
                 .product(name: "CryptoSwift", package: "CryptoSwift"),
                 .product(name: "GoogleCloudKit", package: "google-cloud-kit"),
-                .product(name: "S3", package: "AWSSDKSwift"),
+                .product(name: "SotoS3", package: "soto"),
                 "XCMetricsCommon"
             ],
             swiftSettings: [

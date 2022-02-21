@@ -20,15 +20,6 @@
         }
       },
       {
-        "package": "AWSSDKSwiftCore",
-        "repositoryURL": "https://github.com/swift-aws/aws-sdk-swift-core.git",
-        "state": {
-          "branch": null,
-          "revision": "13738adc1603e4b50ae6aa3f758fc44f51e46aa3",
-          "version": "4.5.1"
-        }
-      },
-      {
         "package": "console-kit",
         "repositoryURL": "https://github.com/vapor/console-kit.git",
         "state": {
@@ -101,12 +92,12 @@
         }
       },
       {
-        "package": "HypertextApplicationLanguage",
-        "repositoryURL": "https://github.com/swift-aws/HypertextApplicationLanguage.git",
+        "package": "jmespath.swift",
+        "repositoryURL": "https://github.com/adam-fowler/jmespath.swift.git",
         "state": {
           "branch": null,
-          "revision": "aa2c9141d491682f17b2310aed17b9adfc006256",
-          "version": "1.1.1"
+          "revision": "4a166ea71f0d9e9cc3523fc3dee516080a4c36a0",
+          "version": "1.0.0"
         }
       },
       {
@@ -152,15 +143,6 @@
           "branch": null,
           "revision": "3bfd2737b700b9a36565a8c94f4ad2b050a5e574",
           "version": "1.0.1"
-        }
-      },
-      {
-        "package": "INIParser",
-        "repositoryURL": "https://github.com/swift-aws/Perfect-INIParser.git",
-        "state": {
-          "branch": null,
-          "revision": "42de0efc7a01105e19b80d533d3d282a98277f6c",
-          "version": "3.0.3"
         }
       },
       {
@@ -236,12 +218,21 @@
         }
       },
       {
-        "package": "AWSSDKSwift",
+        "package": "soto",
         "repositoryURL": "https://github.com/soto-project/soto.git",
         "state": {
           "branch": null,
-          "revision": "803ab6a86a3c90e1405afb8fd6a131ec9b9ec64a",
-          "version": "4.6.0"
+          "revision": "b98994beabdced18cbedbe50e947e6f2c8e0d602",
+          "version": "5.12.1"
+        }
+      },
+      {
+        "package": "soto-core",
+        "repositoryURL": "https://github.com/soto-project/soto-core.git",
+        "state": {
+          "branch": null,
+          "revision": "a216ea49b9ff2480ccbc5880b1aa648032433798",
+          "version": "5.9.2"
         }
       },
       {
@@ -312,8 +303,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "37e7a33de45bac894c0b08b56a2f755ebe4884e6",
-          "version": "2.35.0"
+          "revision": "154f1d32366449dcccf6375a173adf4ed2a74429",
+          "version": "2.38.0"
         }
       },
       {

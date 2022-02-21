@@ -19,7 +19,7 @@
 
 import Foundation
 import Vapor
-import S3
+import SotoS3
 
 /// `LogFileRepository` that uses Amazon S3 to store and fetch logs
 struct LogFileS3Repository: LogFileRepository {
@@ -28,31 +28,32 @@ struct LogFileS3Repository: LogFileRepository {
 
     let s3: S3
 
-    init(accessKey: String, bucketName: String, regionName: String, secretAccessKey: String) {
+    init(bucketName: String, regionName: String) {
         self.bucketName = bucketName
-        guard let region = Region(rawValue: regionName) else {
+        guard let region = Region.init(awsRegionName: regionName) else {
             preconditionFailure("Invalid S3 Region \(regionName)")
         }
-        self.s3 = S3(accessKeyId: accessKey, secretAccessKey: secretAccessKey, region: region)
+
+        let webIdentityCredentialProvider = SotoSTS.CredentialProviderFactory.stsWebIdentityTokenFile(region: region)
+
+        let client = AWSClient(credentialProvider: .selector(.environment, webIdentityCredentialProvider, .ecs, .ec2, CredentialProviderFactory.configFile()), httpClientProvider: .createNew)
+
+        self.s3 = S3(client: client, region: region)
     }
 
     init?(config: Configuration) {
-        guard let bucketName = config.s3Bucket, let accessKey = config.awsAccessKeyId,
-              let secretAccessKey = config.awsSecretAccessKey,
+        guard let bucketName = config.s3Bucket,
               let regionName = config.s3Region else {
             return nil
         }
-        self.init(accessKey: accessKey, bucketName: bucketName,
-                  regionName: regionName, secretAccessKey: secretAccessKey)
+        self.init(bucketName: bucketName, regionName: regionName)
     }
 
     func put(logFile: File) throws -> URL {
         let data = Data(logFile.data.xcm_onlyFileData().readableBytesView)
-
         let putObjectRequest = S3.PutObjectRequest(acl: .private,
-                                                   body: data,
+                                                   body: AWSPayload.data(data),
                                                    bucket: bucketName,
-                                                   contentLength: Int64(data.count),
                                                    key: logFile.filename)
         let fileURL = try s3.putObject(putObjectRequest)
             .map { _ -> URL? in
@@ -70,11 +71,8 @@ struct LogFileS3Repository: LogFileRepository {
         }
         let fileName = logURL.lastPathComponent
         let request = S3.GetObjectRequest(bucket: bucket, key: fileName)
-        let fileData = try s3.getObject(request)
-            .map { response -> Data? in                
-                return response.body
-            }.wait()
-        guard let data = fileData else {
+        let fileData = try s3.getObject(request).wait().body
+        guard let data = fileData?.asData() else {
             throw RepositoryError.unexpected(message: "There was an error downloading file \(logURL)")
         }
         let tmp = try TemporaryFile(creatingTempDirectoryForFilename: "\(UUID().uuidString).xcactivitylog")
