@@ -84,6 +84,7 @@ let package = Package(
                 .product(name: "CryptoSwift", package: "CryptoSwift"),
                 .product(name: "GoogleCloudKit", package: "google-cloud-kit"),
                 .product(name: "SotoS3", package: "soto"),
+                .product(name: "SotoSTS", package: "soto"),
                 "XCMetricsCommon"
             ],
             swiftSettings: [

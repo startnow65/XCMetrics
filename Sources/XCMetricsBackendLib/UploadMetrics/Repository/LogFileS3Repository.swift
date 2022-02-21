@@ -20,6 +20,7 @@
 import Foundation
 import Vapor
 import SotoS3
+import SotoSTS
 
 /// `LogFileRepository` that uses Amazon S3 to store and fetch logs
 struct LogFileS3Repository: LogFileRepository {
@@ -34,9 +35,13 @@ struct LogFileS3Repository: LogFileRepository {
             preconditionFailure("Invalid S3 Region \(regionName)")
         }
 
+        let roleArn = Environment.get("AWS_ROLE_ARN") ?? ""
+        let assumeRoleRequest = SotoSTS.STS.AssumeRoleRequest(roleArn: roleArn, roleSessionName: "xcmetrics")
+        let assumeRoleCredentialProvider = SotoSTS.CredentialProviderFactory.stsAssumeRole(request: assumeRoleRequest, region: region)
+
         let webIdentityCredentialProvider = SotoSTS.CredentialProviderFactory.stsWebIdentityTokenFile(region: region)
 
-        let client = AWSClient(credentialProvider: .selector(.environment, webIdentityCredentialProvider, .ecs, .ec2, CredentialProviderFactory.configFile()), httpClientProvider: .createNew)
+        let client = AWSClient(credentialProvider: .selector(assumeRoleCredentialProvider, .environment, webIdentityCredentialProvider, .ecs, .ec2, CredentialProviderFactory.configFile()), httpClientProvider: .createNew)
 
         self.s3 = S3(client: client, region: region)
     }
